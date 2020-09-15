@@ -1,39 +1,44 @@
 #  Copyright (c) 2020.
-#  Version : 1.0.1
+#  Version : 1.0.2
+#  Script Author : Sushen Biswas and Pedro Brito
+#
+#  Sushen Biswas Github Link : https://github.com/sushen
+#  Pedro Brito Github Link : https://github.com/XiBiTuH
+#
 #  !/usr/bin/env python
-#   coding: utf-8
-
+#  coding: utf-8
 
 from selenium import webdriver
 import time
 import random
 import os
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.chrome.options import Options
 
 #No 1 : Change
 #Change the messages as you wish, one of them will be randomly picked
 subjects = [
-    "আপনার মতামত চাই",
-    "আপনার পরামর্শ চাই",
-    "আরও ভালো করতে সহযোগিতা চাই ",
-    "আপনার পার্টনারশিপ চাই",
-    "আইডিয়া সেল করতে চাই "
+    "I have one idea for sale.",
+    "I need your opinion about one idea.",
+    "I need your mentoring in this field. ",
+    "I need your partnership in this reason. "
 ]
 
 #No 2 : Change
 #Change the messages as you wish, one of them will be randomly picked
 messages = [
-    "আপনার পরামর্শ চাই, আরও ভালো করতে সহযোগিতা চাই এবং আইডিয়া সেল করতে চাই । \n \nhttps://www.sushenbiswas.com/course/business-growth/ ",
-    "আমি এই টিউটরিয়াল সিরিজে আমার কাজের ধরনে বলেছি , আরও ভালো করতে সহযোগিতা চাই \n \nhttps://www.sushenbiswas.com/course/business-growth/",
-    "আইডিয়া সেল করতে চাই , কি ভাবে ব্যাবসা করবো তারও একটা রুপরেখা তৈরী করেছি । \n \nhttps://www.sushenbiswas.com/course/business-growth/",
-    "ভয় হিন শুরু মানেই ভাল মানুষের সাথে শুরু ।  \n \nhttps://www.sushenbiswas.com/course/business-growth/"
+    "Hello Sir, \nI am serving International Organization for more than three years.\nOur company work in Unicef Somalia (Nairobi based) as a BI(Business Intelligence) Consultant. If you accept my invitation I will be a very glade.",
+    "Hello Sir, \nI am working with UNDP base organization for more than three years.\nOur company work in Unicef Somalia (Nairobi based) as a BI(Business Intelligence) Consultant. If you accept my invitation I will be a very glade.",
+    "Hello Sir, \nI am serving International Diplomate  for more than three years.my office is in Gulshan 2 near the Unicef hartal office.\nOur company work in Unicef Somalia (Nairobi based) as a BI(Business Intelligence) Consultant. If you accept my invitation I will be a very glade."
 ]
 
 
-options = webdriver.ChromeOptions()
-options.add_argument("--start-maximized")
-driver = webdriver.Chrome("D:\Project\Python Tutorials Repo\LinkedInMessageSender\chromedriver.exe", chrome_options=options)
-driver.implicitly_wait(5)  # seconds
+chrome_options = Options()
+chrome_options.add_argument("--user-data-dir=chrome-data")
+chrome_options.add_argument("--start-maximized")
+driver = webdriver.Chrome("K:\Project\Python\LeadsAutomotionInLinkdIn\chromedriver.exe",chrome_options=chrome_options)
+chrome_options.add_argument("user-data-dir=chrome-data")
+driver.implicitly_wait(25)  # seconds
 
 #What will be searched
 
@@ -46,21 +51,24 @@ driver.get("https://www.linkedin.com/")
 
 # Login
 
-# I use environment veriable base on this tutorials https://www.youtube.com/watch?v=IolxqkL7cD8
-username = os.environ.get('my_Linkdin_username')
-password = os.environ.get('my_Linkdin_password')
+# Login
+try:
+    # I use environment veriable base on this tutorials https://www.youtube.com/watch?v=IolxqkL7cD8
+    username = os.environ.get('my_Linkdin_username')
+    password = os.environ.get('my_Linkdin_password')
 
+    driver.find_element_by_id("session_key").send_keys(username)
+    driver.find_element_by_id("session_password").send_keys(password)
+    time.sleep(1)
 
-driver.find_element_by_id("session_key").send_keys(username)
-driver.find_element_by_id("session_password").send_keys(password)
-time.sleep(1)
-
-driver.find_element_by_class_name("sign-in-form__submit-button").click()
-time.sleep(waiting_for_page)
+    driver.find_element_by_class_name("sign-in-form__submit-button").click()
+    time.sleep(waiting_for_page)
+except:
+    pass
 
 #No 3 : Change
 #Replace this with the link of your list
-url = "https://www.linkedin.com/sales/lists/people/6708206698034802688?sortCriteria=CREATED_TIME"
+url = "https://www.linkedin.com/sales/lists/people/6709657848672071680?sortCriteria=CREATED_TIME"
 
 driver.get(url)
 time.sleep(waiting_for_page)
@@ -76,12 +84,11 @@ for i in range(pages):
 
     people = driver.find_element_by_tag_name("table").find_elements_by_tag_name("tr")
     people = people[1:]
-    n_people = len(n_people)
+    n_people = len(people)
 
     p = 0
     aux_count = 0
     while n_people > 0:
-
 
         time.sleep(1)
 
@@ -107,7 +114,6 @@ for i in range(pages):
                     except:
                         pass
 
-
                     driver.find_element_by_class_name("compose-form__message-field").send_keys(random.choice(messages))
                     time.sleep(2)
 
@@ -129,7 +135,6 @@ for i in range(pages):
                     driver.find_element_by_class_name("message-overlay").find_element_by_tag_name("header").find_elements_by_tag_name("button")[-1].click()
                     time.sleep(3)
                     break
-
 
         time.sleep(2)
 
@@ -160,8 +165,7 @@ for i in range(pages):
 
         people = driver.find_element_by_tag_name("table").find_elements_by_tag_name("tr")
         people = people[1:]
-        n_people = len(n_people)
+        n_people = len(people)
 
-  
 
 

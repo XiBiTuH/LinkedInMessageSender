@@ -1,7 +1,16 @@
 #  Copyright (c) 2020.
+#  Version : 1.0.2
+#  Script Author : Sushen Biswas and Pedro Brito
+#
+#  Sushen Biswas Github Link : https://github.com/sushen
+#  Pedro Brito Github Link : https://github.com/XiBiTuH
+#
+#  !/usr/bin/env python
+#  coding: utf-8
+#  Copyright (c) 2020.
 #  Version : 1.0.1
 
-#!/usr/bin/env python
+# !/usr/bin/env python
 # coding: utf-8
 
 
@@ -9,43 +18,49 @@ from selenium import webdriver
 import time
 from selenium.webdriver.common.action_chains import ActionChains
 import os
+from selenium.webdriver.chrome.options import Options
 
 
 
-options = webdriver.ChromeOptions()
-options.add_argument("--start-maximized")
-driver = webdriver.Chrome("D:\Project\Python Tutorials Repo\LinkedInMessageSender\chromedriver.exe", chrome_options=options)
+chrome_options = Options()
+chrome_options.add_argument("--user-data-dir=chrome-data")
+chrome_options.add_argument("--start-maximized")
+driver = webdriver.Chrome("K:\Project\Python\LeadsAutomotionInLinkdIn\chromedriver.exe",chrome_options=chrome_options)
+chrome_options.add_argument("user-data-dir=chrome-data")
 driver.implicitly_wait(25)  # seconds
 
-#No 1 : Change
-#What will be searched
-search_parameter = "Garment Bangladesh"
 
-#Time waiting for page
+# No 1 : Change
+# What will be searched
+search_parameter = "undp"
+
+# Time waiting for page
 waiting_for_page = 5
 
-#Time per user
+# Time per user
 time_per_user = 2
 
 driver.get("https://www.linkedin.com/")
-
+time.sleep(2)
 # Login
-# I use environment veriable base on this tutorials https://www.youtube.com/watch?v=IolxqkL7cD8
-username = os.environ.get('my_Linkdin_username')
-password = os.environ.get('my_Linkdin_password')
+try:
+    # I use environment veriable base on this tutorials https://www.youtube.com/watch?v=IolxqkL7cD8
+    username = os.environ.get('my_Linkdin_username')
+    password = os.environ.get('my_Linkdin_password')
 
-driver.find_element_by_id("session_key").send_keys(username)
-driver.find_element_by_id("session_password").send_keys(password)
-time.sleep(1)
+    driver.find_element_by_id("session_key").send_keys(username)
+    driver.find_element_by_id("session_password").send_keys(password)
+    time.sleep(1)
 
-driver.find_element_by_class_name("sign-in-form__submit-button").click()
-time.sleep(waiting_for_page)
+    driver.find_element_by_class_name("sign-in-form__submit-button").click()
+    time.sleep(waiting_for_page)
+except:
+    pass
 
 # Go to leads page
 driver.find_element_by_class_name("global-nav__content").find_elements_by_tag_name("a")[-1].click()
 driver.switch_to.window(driver.window_handles[1])
 time.sleep(waiting_for_page)
-
 
 # Search Education
 driver.implicitly_wait(waiting_for_page)  # seconds
@@ -57,6 +72,27 @@ try:
 except:
     driver.find_elements_by_class_name("artdeco-button--tertiary")[1].click()
 
+bnts = driver.find_element_by_class_name("search-filter__list").find_elements_by_tag_name("li")
+
+bnts[2].find_element_by_class_name("search-filter").click()
+time.sleep(2)
+
+
+driver.find_element_by_class_name("link-without-visited-state").click()
+time.sleep(2)
+
+
+
+bnts[3].find_element_by_class_name("search-filter").click()
+time.sleep(2)
+
+bnts[3].find_element_by_tag_name("input").send_keys("Bangladesh")
+time.sleep(2)
+
+
+bnts[3].find_element_by_class_name("search-filter-typeahead__list").find_element_by_tag_name("button").click()
+time.sleep(2)
+
 
 input("Enter something to continue the script : \n")
 
@@ -65,7 +101,6 @@ time.sleep(waiting_for_page)
 pages = int(
     driver.find_element_by_class_name("search-results__pagination-list").find_elements_by_tag_name("li")[-1].text.split(
         "…")[-1])
-
 
 for i in range(pages):
 
@@ -90,7 +125,8 @@ for i in range(pages):
                     buttons[b].click()
                     time.sleep(1)
 
-                    lists = people.find_element_by_class_name("save-to-list-dropdown").find_elements_by_tag_name("li")[2].find_elements_by_tag_name("li")
+                    lists = people.find_element_by_class_name("save-to-list-dropdown").find_elements_by_tag_name("li")[
+                        2].find_elements_by_tag_name("li")
 
                     for ls in lists:
 
@@ -102,7 +138,7 @@ for i in range(pages):
                             nm = ls.text
                         # No 3 : Change
                         # You have to change this name for your desired list
-                        if "Garment Bangladesh" == nm:
+                        if "UNDP" == nm:
 
                             ls.click()
 
@@ -115,7 +151,7 @@ for i in range(pages):
                                 break
 
                         time.sleep(1)
-                        
+
 
 
 
@@ -126,8 +162,7 @@ for i in range(pages):
         time.sleep(time_per_user)
         aux_count += 80
 
-
-
     driver.find_element_by_class_name("search-results__pagination-next-button").click()
     time.sleep(waiting_for_page)
+
 

@@ -1,21 +1,27 @@
 #  Copyright (c) 2020.
-#  Version : 1.0.1
+#  Version : 1.0.2
+#  Script Author : Sushen Biswas and Pedro Brito
+#
+#  Sushen Biswas Github Link : https://github.com/sushen
+#  Pedro Brito Github Link : https://github.com/XiBiTuH
+#
 #  !/usr/bin/env python
-#   coding: utf-8
-
+#  coding: utf-8
 
 from selenium import webdriver
 import time
 import random
 import os
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.chrome.options import Options
 
 
-options = webdriver.ChromeOptions()
-options.add_argument("--start-maximized")
-driver = webdriver.Chrome("D:\Project\Python Tutorials Repo\LinkedInMessageSender\chromedriver.exe",chrome_options=options)
-driver.implicitly_wait(5)  # seconds
-
+chrome_options = Options()
+chrome_options.add_argument("--user-data-dir=chrome-data")
+chrome_options.add_argument("--start-maximized")
+driver = webdriver.Chrome("K:\Project\Python\LeadsAutomotionInLinkdIn\chromedriver.exe",chrome_options=chrome_options)
+chrome_options.add_argument("user-data-dir=chrome-data")
+driver.implicitly_wait(25)  # seconds
 # What will be searched
 
 # Time waiting for page
@@ -29,21 +35,24 @@ username = str(data).split("\n")[0]
 password = str(data).split("\n")[1]
 '''
 
-# I use environment veriable base on this tutorials https://www.youtube.com/watch?v=IolxqkL7cD8
-username = os.environ.get('my_Linkdin_username')
-password = os.environ.get('my_Linkdin_password')
+try:
+    # I use environment veriable base on this tutorials https://www.youtube.com/watch?v=IolxqkL7cD8
+    username = os.environ.get('my_Linkdin_username')
+    password = os.environ.get('my_Linkdin_password')
 
-driver.find_element_by_id("session_key").send_keys(username)
-driver.find_element_by_id("session_password").send_keys(password)
-time.sleep(1)
+    driver.find_element_by_id("session_key").send_keys(username)
+    driver.find_element_by_id("session_password").send_keys(password)
+    time.sleep(1)
 
-driver.find_element_by_class_name("sign-in-form__submit-button").click()
-time.sleep(waiting_for_page)
+    driver.find_element_by_class_name("sign-in-form__submit-button").click()
+    time.sleep(waiting_for_page)
+except:
+    pass
 
 
 # No 2 : Change
 # #Replace this with the link of your list
-url = "https://www.linkedin.com/sales/lists/people/6700717890691194880?sortCriteria=CREATED_TIME"
+url = "https://www.linkedin.com/sales/lists/people/6709634433944813568?sortCriteria=CREATED_TIME"
 
 driver.get(url)
 time.sleep(waiting_for_page)
@@ -85,13 +94,11 @@ for i in range(pages):
         aux = people[p].find_element_by_class_name("artdeco-dropdown__content-inner").find_elements_by_tag_name("li")
         aux2 = people[p].find_element_by_class_name("artdeco-dropdown__content-inner").find_elements_by_tag_name("div")
 
-
-
         # TO CHANGE
         #---------------------------------------------------------------------------------
 
         # List from where you wanna remove users - MAIN LIST
-        list_to_remove = "Lista de leads de Pedro"
+        list_to_remove = "UNDP"
 
 
 
@@ -99,7 +106,7 @@ for i in range(pages):
         #--------------------------------------
 
         #List to add removed users
-        list_to_add = "List to users that have pending on it"
+        list_to_add = "UNDP Pending Member"
 
         #-------------------------------------------
 
@@ -107,18 +114,18 @@ for i in range(pages):
         # IS CONNECT
         #-------------------------------------------
         message_to_connect = [
-            "আপনার সাথে যোগাযোগ করতে চাই ।",
-            "আপনার এপয়েন্টমেন্ট চাই। বিষয় ইনভেষ্টমেন্ট",
-            "মেন্টরের মত আপনার পরামর্শ চাই ।"
+            "Hello Sir, \nI am serving International Organization for more than three years.\nOur company work in Unicef Somalia (Nairobi based) as a BI(Business Intelligence) Consultant. If you accept my invitation I will be a very glade.",
+            "Hello Sir, \nI am working with UNDP base organization for more than three years.\nOur company work in Unicef Somalia (Nairobi based) as a BI(Business Intelligence) Consultant. If you accept my invitation I will be a very glade.",
+            "Hello Sir, \nI am serving International Diplomate  for more than three years.my office is in Gulshan 2 near the Unicef hartal office.\nOur company work in Unicef Somalia (Nairobi based) as a BI(Business Intelligence) Consultant. If you accept my invitation I will be a very glade."
         ]
 
-        email = "user@gmail.com"
+        email = "sushenbiswasaga@gmail.com"
         #-------------------------------------------
 
 
         #NO CONNECT AND NO PENDING
         #------------------------------------------
-        list_to = "Name of the list that the users dont have pending or connect"
+        list_to = "UNDP Connection"
 
         #-------------------------------------------------------------------------------------
 
@@ -136,7 +143,6 @@ for i in range(pages):
                 is_connect = True
                 break
 
-
         if is_pending:
             for m in range(len(aux)):
                 # No 3 : Change
@@ -145,12 +151,11 @@ for i in range(pages):
                     aux[m].click()
                     time.sleep(3)
 
-
                     cont = driver.find_element_by_class_name("entity-lists-ta__ta-container")
 
                     btns = cont.find_elements_by_tag_name("button")
 
-                    #Remove from list
+                    # Remove from list
                     for b in btns:
                         nm = ""
                         try:
@@ -160,13 +165,12 @@ for i in range(pages):
 
                         if list_to_remove == nm:
                             b.click()
-                            
 
                     time.sleep(2)
                     mn = driver.find_element_by_class_name("entity-lists-ta__unselected-menu")
                     aux_btns = mn.find_elements_by_tag_name("button")
 
-                    for xua in aux_btns:    
+                    for xua in aux_btns:
                         nm = ""
                         try:
                             nm = xua.text.split(" (")[0]
@@ -175,8 +179,6 @@ for i in range(pages):
 
                         if list_to_add == nm:
                             xua.click()
-
-
 
                     time.sleep(1)
                     driver.find_element_by_class_name("edit-entity-lists-modal__save-btn").click()
@@ -196,12 +198,11 @@ for i in range(pages):
                     aux[m].click()
                     time.sleep(3)
 
-
                     cont = driver.find_element_by_class_name("entity-lists-ta__ta-container")
 
                     btns = cont.find_elements_by_tag_name("button")
 
-                    #Remove from list
+                    # Remove from list
                     for b in btns:
 
                         nm = ""
@@ -225,13 +226,10 @@ for i in range(pages):
                         if list_to == nm:
                             xua.click()
 
-
-
                     time.sleep(1)
                     driver.find_element_by_class_name("edit-entity-lists-modal__save-btn").click()
                     p -= 1
                     break
-
 
         driver.find_element_by_id("content-main").click()
         time.sleep(2)
@@ -243,5 +241,6 @@ for i in range(pages):
     except:
         pass
     time.sleep(10)
+
 
 
